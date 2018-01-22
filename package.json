@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "start": "node_modules/react-native/packager/packager.sh",
+    "ios-bundle": "node node_modules/react-native/local-cli/cli.js bundle --platform ios --dev false --entry-file index.js --bundle-output iOS/main.jsbundle --assets-dest ios",
     "test": "jest"
   },
   "dependencies": {

@@ -148,7 +148,7 @@ export default class Exam extends Component {
       if (isQuestion) {
         return item.selected ? 0.7 : 1;
       }
-      return 0.3;
+      return 0.2;
     }
     return item.selected ? 0.7 : 1;
   };
@@ -172,6 +172,7 @@ export default class Exam extends Component {
       <TouchableOpacity
         key={index}
         onPress={() => this.handleIconPressed(item)}
+        disabled={item.selected}
       >
         <Icon
           name={item.name}
