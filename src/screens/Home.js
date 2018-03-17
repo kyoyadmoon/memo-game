@@ -12,6 +12,59 @@ import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { getItem, setItem } from "../utils/asyncStorage";
 import config from "../configs";
 
+export default class Home extends Component {
+  static defaultProps = {
+    lastScore: 0
+  };
+
+  state = {
+    highestScore: 0
+  };
+
+  async componentDidMount() {
+    const highestScore = await getItem(config.HIGHEST_SCORE_STORAGE);
+    if (highestScore !== undefined) {
+      this.setState({ highestScore });
+    } else {
+      setItem(config.HIGHEST_SCORE_STORAGE, 0);
+    }
+  }
+
+  onStart = () => {
+    Actions.memoTime();
+  };
+
+  render() {
+    return (
+      <View style={styles.container}>
+        <View style={styles.modal}>
+          <View style={styles.modalHeader}>
+            <Text style={styles.modalTitle}>MemoGame</Text>
+          </View>
+          <View style={styles.modalContent}>
+            <View style={styles.highestScore}>
+              <Icon name="trophy" size={28} color="#FFD600" />
+              <Text style={styles.label}>
+                最高分: {this.state.highestScore}
+              </Text>
+            </View>
+            <View style={styles.highestScore}>
+              <Icon name="flag-checkered" size={28} color="#40C4FF" />
+              <Text style={styles.label}>上一局: {this.props.lastScore}</Text>
+            </View>
+            <View style={styles.shadowContainer}>
+              <TouchableOpacity style={styles.startBtn} onPress={this.onStart}>
+                <Text style={styles.startBtnText}> Start </Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </View>
+    );
+  }
+}
+
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -86,55 +139,3 @@ const styles = StyleSheet.create({
     paddingRight: 5
   }
 });
-
-export default class Home extends Component {
-  static defaultProps = {
-    lastScore: 0
-  };
-
-  state = {
-    highestScore: 0
-  };
-
-  async componentWillMount() {
-    const highestScore = await getItem(config.HIGHEST_SCORE_STORAGE);
-    if (highestScore !== undefined) {
-      this.setState({ highestScore });
-    } else {
-      setItem(config.HIGHEST_SCORE_STORAGE, 0);
-    }
-  }
-
-  onStart = () => {
-    Actions.memoTime();
-  };
-
-  render() {
-    return (
-      <View style={styles.container}>
-        <View style={styles.modal}>
-          <View style={styles.modalHeader}>
-            <Text style={styles.modalTitle}>MemoGame</Text>
-          </View>
-          <View style={styles.modalContent}>
-            <View style={styles.highestScore}>
-              <Icon name="trophy" size={28} color="#FFD600" />
-              <Text style={styles.label}>
-                最高分: {this.state.highestScore}
-              </Text>
-            </View>
-            <View style={styles.highestScore}>
-              <Icon name="flag-checkered" size={28} color="#40C4FF" />
-              <Text style={styles.label}>上一局: {this.props.lastScore}</Text>
-            </View>
-            <View style={styles.shadowContainer}>
-              <TouchableOpacity style={styles.startBtn} onPress={this.onStart}>
-                <Text style={styles.startBtnText}> Start </Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        </View>
-      </View>
-    );
-  }
-}

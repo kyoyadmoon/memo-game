@@ -3,21 +3,23 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "start": "node_modules/react-native/packager/packager.sh",
+    "start": "react-native start",
     "ios-bundle": "node node_modules/react-native/local-cli/cli.js bundle --platform ios --dev false --entry-file index.js --bundle-output iOS/main.jsbundle --assets-dest ios",
-    "test": "jest"
+    "test": "jest",
+    "postinstall": "rndebugger-open"
   },
   "dependencies": {
-    "lodash": "^4.17.4",
+    "lodash": "4.17.4",
     "react": "16.0.0",
-    "react-native": "^0.51.0",
-    "react-native-router-flux": "^4.0.0-beta.25",
-    "react-native-vector-icons": "^4.4.3"
+    "react-native": "0.51.0",
+    "react-native-router-flux": "4.0.0-beta.25",
+    "react-native-vector-icons": "4.4.3"
   },
   "devDependencies": {
     "babel-jest": "22.0.4",
     "babel-preset-react-native": "4.0.0",
     "jest": "22.0.4",
+    "react-native-debugger-open": "0.3.15",
     "react-test-renderer": "16.0.0"
   },
   "jest": {

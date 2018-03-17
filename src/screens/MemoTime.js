@@ -20,55 +20,14 @@ import CountDownTimer from "../components/CountDownTimer";
 
 const { QUESTION_COUNT, MEMO_TIME } = config;
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 20,
-    paddingBottom: 10,
-    justifyContent: "space-around"
-  },
-  question: {
-    marginTop: 15,
-    padding: 8,
-    justifyContent: "space-around",
-    backgroundColor: "#FFF",
-    alignItems: "center",
-    flexDirection: "row"
-  },
-  timerContainer: {
-    height: 60,
-    justifyContent: "center",
-    alignItems: "center"
-  },
-  skipButton: {
-    padding: 10,
-    backgroundColor: "#29B6F6",
-    position: "absolute",
-    right: 0
-  },
-  skipLabel: {
-    color: "#FFF",
-    fontSize: 16,
-    fontWeight: "700",
-    letterSpacing: 1.5
-  }
-});
-
 export default class MemoTime extends Component {
   state = {
-    questions: []
+    questions: [],
+    skip: false
   };
 
-  static defaultProps = {
-    score: 0
-  };
-
-  componentWillMount() {
+  componentDidMount() {
     const questions = createUniqRandomIcons(QUESTION_COUNT);
-    // _.times(QUESTION_COUNT, () => ({
-    //   name: randomIconName(),
-    //   color: randomIconColor()
-    // }));
     this.setState({
       questions
     });
@@ -99,21 +58,33 @@ export default class MemoTime extends Component {
 
   onTimerFinished = () => {
     Actions.exam({
-      questions: this.state.questions,
-      current: this.props.score
+      questions: this.state.questions
     });
+  };
+
+  handleSkip = () => {
+    this.CountDownTimer.finish();
   };
 
   render() {
     return (
       <View style={styles.container}>
-        <ScrollView>{this.renderQuestions()}</ScrollView>
+        <Text
+          style={styles.desc}
+        >
+          記住每一題的圖形和顏色
+        </Text>
+        <ScrollView style={styles.questionContainer}>{this.renderQuestions()}</ScrollView>
         <View style={styles.timerContainer}>
-          <CountDownTimer time={MEMO_TIME} onFinished={this.onTimerFinished} />
-          <TouchableOpacity
-            style={styles.skipButton}
-            onPress={this.onTimerFinished}
-          >
+          <CountDownTimer
+            ref={ref => {
+              this.CountDownTimer = ref;
+            }}
+            seconds={MEMO_TIME}
+            onFinished={this.onTimerFinished}
+            finish={this.state.skip}
+          />
+          <TouchableOpacity style={styles.skipButton} onPress={this.handleSkip}>
             <Text style={styles.skipLabel}>跳過</Text>
           </TouchableOpacity>
         </View>
@@ -121,3 +92,47 @@ export default class MemoTime extends Component {
     );
   }
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    paddingTop: 20,
+    paddingBottom: 10,
+    justifyContent: "space-around"
+  },
+  question: {
+    marginTop: 15,
+    padding: 8,
+    justifyContent: "space-around",
+    backgroundColor: "#FFF",
+    alignItems: "center",
+    flexDirection: "row"
+  },
+  timerContainer: {
+    height: 60,
+    justifyContent: "center",
+    alignItems: "center"
+  },
+  skipButton: {
+    padding: 10,
+    backgroundColor: "#29B6F6",
+    position: "absolute",
+    right: 15
+  },
+  skipLabel: {
+    color: "#FFF",
+    fontSize: 16,
+    fontWeight: "700",
+    letterSpacing: 1.5
+  },
+  desc: {
+    marginTop: 10,
+    marginBottom: 10,
+    textAlign: "center",
+    fontSize: 18
+  },
+  questionContainer: {
+    marginLeft: 15,
+    marginRight: 15
+  }
+});

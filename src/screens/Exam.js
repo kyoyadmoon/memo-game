@@ -22,40 +22,6 @@ import { getItem, setItem } from "../utils/asyncStorage";
 
 const { ANSWER_TIME, QUESTION_COUNT, SELECTION_COUNT } = config;
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    paddingTop: 20,
-    justifyContent: "space-around",
-    alignItems: "center"
-  },
-  content: {
-    margin: 10,
-    flexDirection: "row",
-    flexWrap: "wrap",
-    justifyContent: "space-around",
-    backgroundColor: "#FFF"
-  },
-  footer: {
-    height: 120,
-    justifyContent: "center"
-  },
-  resultContainer: {
-    flex: 1,
-    justifyContent: "space-around"
-  },
-  button: {
-    padding: 10,
-    backgroundColor: "#29B6F6"
-  },
-  label: {
-    fontSize: 20,
-    fontWeight: "600",
-    color: "#29B6F6",
-    textAlign: "center"
-  }
-});
-
 export default class Exam extends Component {
   state = {
     selected: [],
@@ -216,6 +182,7 @@ export default class Exam extends Component {
   render() {
     return (
       <View style={styles.container}>
+        <Text style={styles.desc}>選出正確的顏色圖形組合</Text>
         <View style={styles.content}>{this.renderQuestions()}</View>
         <View style={styles.footer}>
           {this.state.isFinished ? (
@@ -232,7 +199,7 @@ export default class Exam extends Component {
             </View>
           ) : (
             <CountDownTimer
-              time={ANSWER_TIME}
+              seconds={ANSWER_TIME}
               onFinished={this.onTimerFinished}
             />
           )}
@@ -241,3 +208,42 @@ export default class Exam extends Component {
     );
   }
 }
+
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    paddingTop: 20,
+    justifyContent: "space-around",
+    alignItems: "center"
+  },
+  content: {
+    margin: 10,
+    flexDirection: "row",
+    flexWrap: "wrap",
+    justifyContent: "space-around",
+    backgroundColor: "#FFF"
+  },
+  footer: {
+    height: 120,
+    justifyContent: "center"
+  },
+  resultContainer: {
+    flex: 1,
+    justifyContent: "space-around"
+  },
+  button: {
+    padding: 10,
+    backgroundColor: "#29B6F6"
+  },
+  label: {
+    fontSize: 20,
+    fontWeight: "600",
+    color: "#29B6F6",
+    textAlign: "center"
+  },
+  desc: {
+    marginTop: 10,
+    fontSize: 20
+  }
+});
