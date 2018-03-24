@@ -1,4 +1,5 @@
 import _ from "lodash";
+import PropTypes from "prop-types";
 import React, { Component, PureComponent } from "react";
 import {
   Text,
@@ -23,31 +24,18 @@ import { getItem, setItem } from "../utils/asyncStorage";
 const { ANSWER_TIME, QUESTION_COUNT, SELECTION_COUNT } = config;
 
 export default class Exam extends Component {
+  static propTypes = {
+    questions: PropTypes.array.isRequired
+  };
+
   state = {
     selected: [],
     items: [],
-    answers: [],
     isFinished: false,
-    // isWin: true,
     score: 0
   };
 
-  componentWillMount() {
-    // const items = this.props.questions.map(question => ({
-    //   ...question,
-    //   selected: false
-    // }));
-    // while (items.length < SELECTION_COUNT) {
-    //   const newIcon = {
-    //     name: randomIconName(),
-    //     color: randomIconColor(),
-    //     selected: false
-    //   };
-    //   const isExist = _.find(items, newIcon);
-    //   if (isExist === undefined) {
-    //     items.push(newIcon);
-    //   }
-    // }
+  componentDidMount() {
     const icons = createUniqRandomIcons(SELECTION_COUNT, this.props.questions);
     const items = icons.map(icon => ({ ...icon, selected: false }));
     // console.dir(items);
@@ -64,23 +52,13 @@ export default class Exam extends Component {
   };
 
   componentDidUpdate = (prevState, prevProps) => {
+    // 玩家選完答案 -> 遊戲結束
     if (
       prevState !== this.state &&
       this.state.selected.length === this.props.questions.length &&
       this.state.isFinished === false
     ) {
-      const concatIcons = _.concat(
-        [],
-        this.state.selected,
-        this.props.questions
-      );
-      const uniqIcons = _.uniqWith(
-        concatIcons,
-        (arr1, arr2) => arr1.name === arr2.name && arr1.color === arr2.color
-      );
-      // if (uniqIcons.length === this.props.questions.length) {
       this.gameFinished();
-      // }
     }
   };
 
@@ -98,7 +76,7 @@ export default class Exam extends Component {
   gameFinished = async () => {
     const score = this.calcScore();
     this.setState({ isFinished: true, score });
-    // record score
+    // 如果是新紀錄 -> 記錄最高分到 AsyncStorage
     const highestScore = await getItem(config.HIGHEST_SCORE_STORAGE);
     if (score > highestScore) {
       setItem(config.HIGHEST_SCORE_STORAGE, score);
@@ -106,7 +84,7 @@ export default class Exam extends Component {
     }
   };
 
-  calOpacity = item => {
+  getOpacity = item => {
     if (this.state.isFinished) {
       const { name, color } = item;
       const isQuestion =
@@ -125,12 +103,6 @@ export default class Exam extends Component {
       state.selected = [...state.selected, targetIcon];
       return state;
     });
-    // const isCorrect = this.checkAnswer(targetIcon);
-    // if (!isCorrect) {
-    //   this.setState({ isWin: false }, () => {
-    //     this.gameFinished();
-    //   });
-    // }
   };
 
   renderQuestions = () => {
@@ -144,7 +116,7 @@ export default class Exam extends Component {
           name={item.name}
           size={40}
           color={item.color}
-          style={{ padding: 12, opacity: this.calOpacity(item) }}
+          style={{ padding: 12, opacity: this.getOpacity(item) }}
         />
       </TouchableOpacity>
     ));
@@ -165,24 +137,19 @@ export default class Exam extends Component {
   };
 
   onTimerFinished = () => {
-    const isCorrect = this.checkAnswers();
-    // this.setState({ isWin: isCorrect },
     this.gameFinished();
-    // );
   };
 
   handleEndButton = () => {
-    // if (this.state.isWin) {
-    //   Actions.memoTime();
-    // } else {
     Actions.home({ lastScore: this.state.score });
-    // }
   };
 
   render() {
     return (
       <View style={styles.container}>
-        <Text style={styles.desc}>選出正確的顏色圖形組合</Text>
+        <Text style={styles.desc}>
+          選出正確的{this.props.questions.length}個顏色圖形組合
+        </Text>
         <View style={styles.content}>{this.renderQuestions()}</View>
         <View style={styles.footer}>
           {this.state.isFinished ? (
@@ -208,7 +175,6 @@ export default class Exam extends Component {
     );
   }
 }
-
 
 const styles = StyleSheet.create({
   container: {

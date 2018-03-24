@@ -63,7 +63,7 @@ export default class MemoTime extends Component {
   };
 
   handleSkip = () => {
-    this.CountDownTimer.finish();
+    this.CountDownTimer.onTimesUp();
   };
 
   render() {
@@ -82,7 +82,6 @@ export default class MemoTime extends Component {
             }}
             seconds={MEMO_TIME}
             onFinished={this.onTimerFinished}
-            finish={this.state.skip}
           />
           <TouchableOpacity style={styles.skipButton} onPress={this.handleSkip}>
             <Text style={styles.skipLabel}>跳過</Text>

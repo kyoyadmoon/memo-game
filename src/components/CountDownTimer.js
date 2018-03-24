@@ -48,10 +48,6 @@ export default class CountDownTimer extends Component {
     this.props.onFinished();
   };
 
-  finish = () => {
-    this.onTimesUp();
-  };
-
   render() {
     return (
       <View style={styles.container}>
