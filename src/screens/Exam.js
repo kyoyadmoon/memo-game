@@ -122,20 +122,6 @@ export default class Exam extends Component {
     ));
   };
 
-  checkAnswers = () => {
-    if (this.state.selected.length === this.props.questions.length) {
-      for (let item of this.state.selected) {
-        const isCorrect = this.checkAnswer(item);
-        if (!isCorrect) {
-          return false;
-        }
-      }
-      return true;
-    } else {
-      return false;
-    }
-  };
-
   onTimerFinished = () => {
     this.gameFinished();
   };
@@ -150,7 +136,9 @@ export default class Exam extends Component {
         <Text style={styles.desc}>
           選出正確的{this.props.questions.length}個顏色圖形組合
         </Text>
-        <View style={styles.content}>{this.renderQuestions()}</View>
+        <View style={styles.content}>
+          {this.renderQuestions()}
+        </View>
         <View style={styles.footer}>
           {this.state.isFinished ? (
             <View style={styles.resultContainer}>

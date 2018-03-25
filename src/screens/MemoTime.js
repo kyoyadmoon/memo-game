@@ -22,8 +22,7 @@ const { QUESTION_COUNT, MEMO_TIME } = config;
 
 export default class MemoTime extends Component {
   state = {
-    questions: [],
-    skip: false
+    questions: []
   };
 
   componentDidMount() {
@@ -74,7 +73,9 @@ export default class MemoTime extends Component {
         >
           記住每一題的圖形和顏色
         </Text>
-        <ScrollView style={styles.questionContainer}>{this.renderQuestions()}</ScrollView>
+        <ScrollView style={styles.questionContainer}>
+          {this.renderQuestions()}
+        </ScrollView>
         <View style={styles.timerContainer}>
           <CountDownTimer
             ref={ref => {
